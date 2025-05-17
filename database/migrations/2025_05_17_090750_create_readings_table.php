@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('readings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('progress')->nullable();
+            $table->foreignId('user_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('chapter_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
     }

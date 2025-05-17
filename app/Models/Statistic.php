@@ -9,4 +9,6 @@ class Statistic extends Model
 {
     /** @use HasFactory<\Database\Factories\StatisticFactory> */
     use HasFactory;
+
+    protected $guarded=[];
 }
