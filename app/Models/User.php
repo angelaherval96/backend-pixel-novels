@@ -51,6 +51,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function createdNovels()
+    {
+        return $this->hasMany(Novel::class);
+    }
+    
     public function favouriteNovels()
     {
         return $this->belongsToMany(Novel::class)->withTimestamps(); //necesario para manejar timestamps en la tabla intermedia y que se registre automáticamente cuando se agregue o elimine un favorito

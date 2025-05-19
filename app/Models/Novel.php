@@ -15,6 +15,11 @@ class Novel extends Model
 
     protected $guarded=[];
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function chapters()
     {
         return $this->hasMany(Chapter::class);
