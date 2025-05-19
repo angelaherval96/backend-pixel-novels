@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Chapter;
+use App\Models\Statistic;
+use App\Models\User;
 
 class Novel extends Model
 {
@@ -17,9 +20,13 @@ class Novel extends Model
         return $this->hasMany(Chapter::class);
     }
 
-    public function statistics()
+    public function statistic()
     {
         return $this->hasOne(Statistic::class);
     }
 
+    public function userWhoFavourited()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps(); //necesario para manejar timestamps en la tabla intermedia y que se registre automáticamente cuando se agregue o elimine un favorito
+    }
 }
