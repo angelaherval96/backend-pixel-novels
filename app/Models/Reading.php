@@ -9,4 +9,6 @@ class Reading extends Model
 {
     /** @use HasFactory<\Database\Factories\ReadingFactory> */
     use HasFactory;
+
+    protected $guarded=[];
 }

@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('chapters', function (Blueprint $table) {
             $table->id();
+            $table->string('title')->nullable();
+            $table->text('content');
+            $table->foreignId('novel_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

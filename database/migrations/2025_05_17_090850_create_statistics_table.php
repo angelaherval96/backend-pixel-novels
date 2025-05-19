@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('statistics', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('views')->default(0);
+            $table->unsignedInteger('likes')->default(0);
+            $table->unsignedInteger('shares')->default(0);
+            $table->foreingId('novel_id')->constrained()->opUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
