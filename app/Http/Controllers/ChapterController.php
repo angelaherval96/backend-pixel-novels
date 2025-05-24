@@ -11,7 +11,7 @@ use App\Http\Requests\UpdateChapterRequest;
 class ChapterController extends Controller
 {   
     //Busca un capítulo en una novela específica
-    private function findChapterInNovel(Novel $novelId, Chapter $chapterId)
+    private function findChapterInNovel(int $novelId, int $chapterId)
     {
         $chapter = Chapter::where('novel_id', $novelId)->where('id', $chapterId)->first();
         if (!$chapter) {
@@ -25,13 +25,11 @@ class ChapterController extends Controller
     {
         $user = auth()->user();
         if ($user->role !== 'creator' && $user->role !== 'admin') {
-            abort(response()->json(['message' => 'No autorizado'], 403));
+            abort(403, 'No autorizado');
         }
     }
 
-    /**
-     * Display a listing of the resource.
-     */
+    //Lista todos los capítulos de una novela específica
     public function index(Novel $novel)
     {   
         $chapters = Chapter::where('novel_id', $novel->id)->get();
@@ -43,9 +41,7 @@ class ChapterController extends Controller
         //return Chapter::all();
     }
 
-    /**
-     * Display the specified resource.
-     */
+    //Muestra un capítulo específico de una novela en concreto
     public function show(Novel $novel, Chapter $chapter)
     {   
         $chapterInNovel = $this->findChapterInNovel($novel->id, $chapter->id);
@@ -55,9 +51,7 @@ class ChapterController extends Controller
     }
 
     
-    /**
-     * Store a newly created resource in storage.
-     */
+    //Almacena un nuevo capítulo en una novela específica
     public function store(StoreChapterRequest $request, Novel $novel)
     {   
         
@@ -79,9 +73,7 @@ class ChapterController extends Controller
     }
 
     
-    /**
-     * Update the specified resource in storage.
-     */
+    //Actualiza un capítulo específico de una novela
     public function update(UpdateChapterRequest $request, Novel $novel, Chapter $chapter)
     {   
         $this->authorizeCreatorOrAdmin();
@@ -93,9 +85,7 @@ class ChapterController extends Controller
         return response()->json($chapterInNovel, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    //Elimina un capítulo específico de una novela
     public function destroy(Novel $novel, Chapter $chapter)
     {   
         $this->authorizeCreatorOrAdmin();
@@ -106,6 +96,8 @@ class ChapterController extends Controller
         return response()->json(null, 204);
     }
 
+
+    // MÉTODOS POR COMPLETAR PARA SUBIR Y ELIMINAR ARCHIVOS MULTIMEDIA
     public function uploadMedia(Request $request, Chapter $chapter)
     {
         $this->authorizeCreatorOrAdmin();
