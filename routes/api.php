@@ -24,25 +24,33 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/user', [AuthController::class, 'update']);
 
     //Añadir y eliminar favoritos
-    Route::post('/novels/{id}/favourite', [FavouriteController::class, 'store']);
-    Route::delete('/novels/{id}/favourite', [FavouriteController::class, 'destroy']);
+    Route::post('/novels/{novel}/favourite', [FavouriteController::class, 'store']);
+    Route::delete('/novels/{novel}/favourite', [FavouriteController::class, 'destroy']);
     
     //Añadir, actualizar o eliminar lecturas/progreso
-    Route::post('/chapters/{id}/read', [ReadingController::class, 'storeOrUpdate']);
-    Route::delete('/chapters/{id}/read', [ReadingController::class, 'destroy']);
+    Route::post('/chapters/{chapter}/read', [ReadingController::class, 'storeOrUpdate']);
+    Route::delete('/chapters/{chapter}/read', [ReadingController::class, 'destroy']);
     Route::get('/readings', [ReadingController::class, 'index']);
+
+    //Montrar, listar, actualizar, guardar y eliminar capítulos de una novela
+    Route::get('/novels/{novel}/chapters', [ChapterController::class, 'index']);
+    Route::get('/novels/{novel}/chapters/{chapter}', [ChapterController::class, 'show']);
+    Route::post('/novels/{novel}/chapters', [ChapterController::class, 'store']);
+    Route::put('/novels/{novel}/chapters/{chapter}', [ChapterController::class, 'update']);
+    Route::delete('/novels/{novel}/chapters/{chapter}', [ChapterController::class, 'destroy']);
+    
 
     //Crea todas las rutas protegidas, menos las funciones index y show del controlador
     Route::apiResource('/novels', NovelController::class)->except(['index', 'show']);
-    Route::apiResource('/chapters', ChapterController::class);
+
     //Crea solo las rutas store y update como protegidas
     Route::apiResource('/statistics', StatisticController::class)->only(['store', 'update']);
 
     //Subir y eliminar archivos multimedia
-    Route::post('/novels/{id}/media', [NovelController::class, 'uploadMedia']);
-    Route::delete('/novels/{id}/media/{mediaId}', [NovelController::class, 'deleteMedia']);
-    Route::post('/chapters/{id}/media', [ChapterController::class, 'uploadMedia']);
-    Route::delete('/chapters/{id}/media/{mediaId}', [ChapterController::class, 'deleteMedia']);
+    Route::post('/novels/{novel}/media', [NovelController::class, 'uploadMedia']);
+    Route::delete('/novels/{novel}/media/{mediaId}', [NovelController::class, 'deleteMedia']);
+    Route::post('/chapters/{novel}/media', [ChapterController::class, 'uploadMedia']);
+    Route::delete('/chapters/{novel}/media/{mediaId}', [ChapterController::class, 'deleteMedia']);
   
 });
 
@@ -58,5 +66,5 @@ Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 //Mostrar estadísticas
 Route::get('/statistics', [StatisticController::class, 'index']);
 
-//Mostrar novelas y capítulos
+//Mostrar novelas
 Route::apiResource('/novels', NovelController::class)->only(['index', 'show']);
