@@ -17,7 +17,13 @@ class FavouriteController extends Controller
             $user->favouriteNovels()->attach($novel->id);
         }
 
-        return response()->json(['message' => 'Novela añadida a favoritos.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Novela añadida a favoritos.',
+            'data' => [
+                'novel' => $novel
+            ]
+        ], 201);
     }
 
     //Eliminar novela de favoritos
@@ -26,7 +32,11 @@ class FavouriteController extends Controller
         $user = Auth::user();
         $user->favouriteNovels()->detach($novel->id);
 
-        return response()->json(['message' => 'Novela eliminada de favoritos.']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Novela eliminada de favoritos.',
+            'data' =>null
+        ], 200);
     }
 
     //Listar novelas favoritas
@@ -35,6 +45,12 @@ class FavouriteController extends Controller
         $user = Auth::user();
         $favouriteNovels = $user->favouriteNovels()->with('creator')->get();
 
-        return response()->json($favouriteNovels);
+        return response()->json([
+            'success' => true,
+            'message' => 'Novelas favoritas obtenidas correctamente.',
+            'data' => [
+                'favouriteNovels' => $favouriteNovels
+            ]
+        ], 200);
     }
 }

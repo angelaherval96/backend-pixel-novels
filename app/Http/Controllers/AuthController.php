@@ -40,14 +40,19 @@ class AuthController extends Controller
             
             // Respuesta
             return response()->json([
+                'success' => true,
                 'message' => 'Usuario registrado exitosamente',
-                'user' => $user,
-                'token' => $token,
+                'data' => [
+                    'user' => $user,
+                    'token' => $token,
+                ]
             ], 201);
 
         } catch (Exception $e) {
             return response()->json([
+                'success' => false,
                 'message' => 'Error al registrar el usuario: ' . $e->getMessage(),
+                'data' => null
             ], 500);
         } 
     }
@@ -57,15 +62,22 @@ class AuthController extends Controller
         // Lógica para autenticar al usuario
         $credentials = $request->only('email', 'password');
         if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Credenciales inválidas'], 401);
+            return response()->json([
+                'success' => false,
+                'message' => 'Credenciales inválidas.',
+                'data' => null
+            ], 401);
         }
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
+            'success' => true,
             'message' => 'Usuario autenticado exitosamente',
-            'user' => $user,
-            'token' => $token,
-        ]);
+            'data' => [
+                'user' => $user,
+                'token' => $token,
+            ]
+        ], 200);
     }
 
     //Cierra sesión del usuario actual
@@ -77,7 +89,11 @@ class AuthController extends Controller
 
         //Cerrar sesión actual 
         $request->user()->currentAccessToken()->delete();
-        return response()->json(['message' => 'Sesión cerrada exitosamente']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Sesión cerrada exitosamente',
+            'data' => null
+        ], 200);
     }
 
     //Actualiza el perfil del usuario autenticado, pudiendo actualizar el nombre y email
@@ -89,7 +105,13 @@ class AuthController extends Controller
             'email' => 'sometimes|required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
         $user->update($request->only('name', 'email'));
-        return response()->json(['message' => 'Perfil actualizado exitosamente', 'user' => $user]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Perfil actualizado exitosamente', 
+            'data' => [
+                'user' => $user
+            ]
+        ], 200);
     }
 
     //Enviar enlace de recuperación de contraseña
@@ -98,10 +120,20 @@ class AuthController extends Controller
         $request->validate(['email' => 'required|string|email']);
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado',
+                'data' => null
+            ], 404);
         }
         // Aquí se debería enviar un enlace de restablecimiento de contraseña al correo electrónico del usuario, lo dejo como algo opcional a fututo
-        return response()->json(['message' => 'Enlace de restablecimiento de contraseña enviado']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Enlace de restablecimiento de contraseña enviado',
+            'data' => [
+                'email' => $user->email
+            ]
+        ], 200);
     }
 
     //Restablecer la contraseña del usuario
@@ -113,11 +145,21 @@ class AuthController extends Controller
         ]);
         $user = User::where('email', $request->email)->first();
         if (!$user) {
-            return response()->json(['message' => 'Usuario no encontrado'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no encontrado',
+                'data' => null
+            ], 404);
         }
         $user->password = Hash::make($request->password);
         $user->save();
-        return response()->json(['message' => 'Contraseña restablecida exitosamente']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Contraseña restablecida exitosamente',
+            'data' => [
+                'user' => $user
+            ]
+        ], 200);
     }
     
 }

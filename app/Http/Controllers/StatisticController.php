@@ -34,7 +34,9 @@ class StatisticController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'No hay estadísticas registradas.',
-                'data' => null
+                'data' => [
+                    'statistics' => []
+                ]
             ], 404);
         }
         return response()->json([
