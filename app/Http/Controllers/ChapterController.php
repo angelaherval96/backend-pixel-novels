@@ -16,7 +16,11 @@ class ChapterController extends Controller
     {
         $chapter = Chapter::where('novel_id', $novelId)->where('id', $chapterId)->first();
         if (!$chapter) {
-            return response()->json(['message' => 'Capítulo no encontrado'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'Capítulo no encontrado',
+                'data' => null
+            ], 404); // 404 Not Found, capítulo no encontrado
         }
         return $chapter;
     }
@@ -26,7 +30,7 @@ class ChapterController extends Controller
     {
         $user = auth()->user();
         if ($user->role !== 'creator' && $user->role !== 'admin') {
-            abort(403, 'No autorizado');
+            abort(403, 'No autorizado'); // 403 Forbidden, el usuario no tiene permiso para realizar esta acción
         }
     }
 
@@ -35,9 +39,20 @@ class ChapterController extends Controller
     {   
         $chapters = Chapter::where('novel_id', $novel->id)->get();
         if ($chapters->isEmpty()) {
-            return response()->json(['message' => 'No hay capítulos disponibles para esta novela'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No hay capítulos disponibles para esta novela.',
+                'data' => null
+            ], 404);
         }
-        return response()->json($chapters);
+        return response()->json([
+            'success' => true,
+            'message' => 'Capítulos obtenidos correctamente.',
+            'data' => [
+                'chapters' => $chapters
+            ]
+            ], 200); // 200 OK, éxito al obtener los capítulos
+
         //Devuelve todos los capítulo existentes en la base de datos
         //return Chapter::all();
     }
@@ -46,9 +61,14 @@ class ChapterController extends Controller
     public function show(Novel $novel, Chapter $chapter)
     {   
         $chapterInNovel = $this->findChapterInNovel($novel->id, $chapter->id);
-        
-        // Return a specific chapter
-        return response()->json($chapterInNovel);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Capítulo obtenido correctamente.',
+            'data' => [
+                'chapter' => $chapterInNovel
+            ]
+        ], 200);
     }
 
     
@@ -62,15 +82,25 @@ class ChapterController extends Controller
             ->where('title', $request->title)
             ->exists();
         if ($exists) {
-            return response()->json(['message' => 'El capítulo ya existe en esta novela'], 409);
+            return response()->json([
+                'success' => false,
+                'message' => 'El capítulo ya existe en esta novela',
+                'data' => null
+            ], 409); //409 conflicto de unicidad (capítulo ya existe)
         }
 
-        // Validate and create a new chapter
+        // Valida y crea el capítulo
         $validatedData = $request->validated();
-        $validatedData['novel_id'] = $novel->id; // Associate the chapter with the novel
+        $validatedData['novel_id'] = $novel->id; // Asociar el capítulo a la novela
         $chapter = Chapter::create($validatedData);
 
-        return response()->json($chapter, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'Capítulo creado correctamente.',
+            'data' => [
+                'chapter' => $chapter
+            ]
+        ], 201);
     }
 
     
@@ -83,7 +113,13 @@ class ChapterController extends Controller
         $validatedData = $request->validated();
         $chapterInNovel->update($validatedData);
 
-        return response()->json($chapterInNovel, 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Capítulo actualizado correctamente.',
+            'data' => [
+                'chapter' => $chapterInNovel
+            ]
+        ], 200);
     }
 
     //Elimina un capítulo específico de una novela
@@ -94,7 +130,11 @@ class ChapterController extends Controller
         
         $chapterInNovel->delete();
 
-        return response()->json(null, 204);
+        return response()->json([
+            'success' => true,
+            'message' => 'Capítulo eliminado correctamente.',
+            'data' => null
+        ], 200);
     }
 
 }

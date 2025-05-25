@@ -18,10 +18,23 @@ class ReadingController extends Controller
         $readings = Reading::where('user_id', $user->id)->with('chapter.novel')->get();
 
         if ($readings->isEmpty()) {
-            return response()->json(['message' => 'No hay lecturas registradas.'], 404);
+            return response()->json([
+                'success' => false,
+                'message' => 'No hay lecturas registradas.',
+                'data' => [
+                    'readings' => []
+                ]
+            ], 404);
         }
 
-        return response()->json($readings);
+        return response()->json([
+            'success' => true,
+            'message' => 'Lecturas obtenidas correctamente.',
+            'data' => [
+                'readings' => $readings
+            ]
+        ], 200);
+        
     }
 
     //Crear o actualizar una lectura
@@ -45,7 +58,13 @@ class ReadingController extends Controller
             
             ]);
 
-        return response()->json(['message'=> 'Progreso guardado correctamente.', 'readings' => $reading], 201);
+        return response()->json([
+            'success' => true,
+            'message'=> 'Progreso guardado correctamente.', 
+            'data'=> [
+               'readings' => $reading 
+            ]
+        ], 201);
     }
    
     //Muestra una lectura específica del usuario autenticado
@@ -55,10 +74,20 @@ class ReadingController extends Controller
 
         // Verifica si la lectura pertenece al usuario autenticado
         if ($reading->user_id !== $user->id) {
-            return response()->json(['message' => 'No autorizado para ver esta lectura.'], 403);
+            return response()->json([
+                'success' => false,
+                'message' => 'No autorizado para ver esta lectura.',
+                'data' => null
+            ], 403);
         }
 
-        return response()->json($reading);
+        return response()->json([
+            'success' => true,
+            'message' => 'Lectura obtenida correctamente.',
+            'data' => [
+                'reading' => $reading
+            ]
+        ], 200); 
     }
 
     //Elimina una lectura del usuario autenticado
@@ -68,11 +97,19 @@ class ReadingController extends Controller
 
         // Verifica si la lectura pertenece al usuario autenticado
         if ($reading->user_id !== $user->id) {
-            return response()->json(['message' => 'No autorizado para eliminar esta lectura.'], 403);
+            return response()->json([
+                'success' => false,
+                'message' => 'No autorizado para eliminar esta lectura.',
+                'data' => null
+            ], 403);
         }
 
         $reading->delete();
 
-        return response()->json(['message' => 'Lectura eliminada correctamente.'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'Lectura eliminada correctamente.',
+            'data' => null
+        ], 200);
     }
 }
