@@ -61,6 +61,7 @@ Route::post('/password/reset', [AuthController::class, 'resetPassword']);
 
 //Mostrar estadísticas
 Route::get('/statistics', [StatisticController::class, 'index']);
+Route::get('novelx/{novel}/statistics', [StatisticController::class, 'show']);
 
 //Mostrar novelas
 Route::apiResource('/novels', NovelController::class)->only(['index', 'show']);

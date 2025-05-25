@@ -15,6 +15,6 @@ class Statistic extends Model
 
     public function novel()
     {
-        return $this->hasMany(Novel::class);
+        return $this->belongsTo(Novel::class);
     }
 }
