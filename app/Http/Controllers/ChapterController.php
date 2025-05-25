@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\Novel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreChapterRequest;
 use App\Http\Requests\UpdateChapterRequest;
 
@@ -96,24 +97,5 @@ class ChapterController extends Controller
         return response()->json(null, 204);
     }
 
-
-    // MÉTODOS POR COMPLETAR PARA SUBIR Y ELIMINAR ARCHIVOS MULTIMEDIA
-    public function uploadMedia(Request $request, Chapter $chapter)
-    {
-        $this->authorizeCreatorOrAdmin();
-
-        // Handle media upload logic here
-        // Example: $request->file('media')->store('chapters');
-
-        return response()->json(['message' => 'Media uploaded successfully']);
-    }
-    public function deleteMedia(Request $request, Chapter $chapter, $mediaId)
-    {
-        $this->authorizeCreatorOrAdmin();
-
-        // Handle media deletion logic here
-        // Example: Storage::delete('chapters/' . $mediaId);
-
-        return response()->json(['message' => 'Media deleted successfully']);
-    }
 }
+

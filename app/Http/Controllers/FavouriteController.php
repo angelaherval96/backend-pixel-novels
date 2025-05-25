@@ -28,4 +28,13 @@ class FavouriteController extends Controller
 
         return response()->json(['message' => 'Novela eliminada de favoritos.']);
     }
+
+    //Listar novelas favoritas
+    public function index()
+    {
+        $user = Auth::user();
+        $favouriteNovels = $user->favouriteNovels()->with('creator')->get();
+
+        return response()->json($favouriteNovels);
+    }
 }

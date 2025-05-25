@@ -23,9 +23,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //Actualizar perfil del usuario
     Route::put('/user', [AuthController::class, 'update']);
 
-    //Añadir y eliminar favoritos
+    //Añadir, eliminar y listar favoritos
     Route::post('/novels/{novel}/favourite', [FavouriteController::class, 'store']);
     Route::delete('/novels/{novel}/favourite', [FavouriteController::class, 'destroy']);
+    Route::get('/favourites', [FavouriteController::class, 'index']);
     
     //Añadir, actualizar o eliminar lecturas/progreso
     Route::post('/chapters/{chapter}/read', [ReadingController::class, 'storeOrUpdate']);
@@ -46,12 +47,6 @@ Route::middleware('auth:sanctum')->group(function () {
     //Crea solo las rutas store y update como protegidas
     Route::apiResource('/statistics', StatisticController::class)->only(['store', 'update']);
 
-    //Subir y eliminar archivos multimedia
-    Route::post('/novels/{novel}/media', [NovelController::class, 'uploadMedia']);
-    Route::delete('/novels/{novel}/media/{mediaId}', [NovelController::class, 'deleteMedia']);
-    Route::post('/chapters/{novel}/media', [ChapterController::class, 'uploadMedia']);
-    Route::delete('/chapters/{novel}/media/{mediaId}', [ChapterController::class, 'deleteMedia']);
-  
 });
 
 //Rutas sin login
