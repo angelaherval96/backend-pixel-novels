@@ -28,10 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/novels/{novel}/favourite', [FavouriteController::class, 'destroy']);
     Route::get('/favourites', [FavouriteController::class, 'index']);
     
-    //Añadir, actualizar o eliminar lecturas/progreso
+    //Añadir, actualizar, mostrar o eliminar lecturas/progreso
     Route::post('/chapters/{chapter}/read', [ReadingController::class, 'storeOrUpdate']);
     Route::delete('/chapters/{chapter}/read', [ReadingController::class, 'destroy']);
     Route::get('/readings', [ReadingController::class, 'index']);
+    Route::get('/readings/{reading}', [ReadingController::class, 'show']);
 
     //Montrar, listar, actualizar, guardar y eliminar capítulos de una novela
     Route::get('/novels/{novel}/chapters', [ChapterController::class, 'index']);
