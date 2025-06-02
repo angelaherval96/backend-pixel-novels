@@ -43,7 +43,7 @@ Route::middleware('auth:sanctum')->group(function () {
     
 
     //Crea todas las rutas protegidas, menos las funciones index y show del controlador
-    Route::apiResource('/novels', NovelController::class)->except(['index', 'show']);
+    Route::apiResource('/novels', NovelController::class); //->except(['index', 'show']);
 
     //Crea solo las rutas store y update como protegidas
     Route::apiResource('/statistics', StatisticController::class)->only(['store', 'update']);
@@ -64,4 +64,4 @@ Route::get('/statistics', [StatisticController::class, 'index']);
 Route::get('novelx/{novel}/statistics', [StatisticController::class, 'show']);
 
 //Mostrar novelas
-Route::apiResource('/novels', NovelController::class)->only(['index', 'show']);
+//Route::apiResource('/novels', NovelController::class)->only(['index', 'show']);

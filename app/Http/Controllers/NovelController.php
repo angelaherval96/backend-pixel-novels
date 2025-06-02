@@ -45,7 +45,6 @@ class NovelController extends Controller
     //Guardar una nueva novela
     public function store(StoreNovelRequest $request)
     {
-        $this->authorizeCreatorOrAdmin();
 
         $validated = $request->validated();
 
@@ -87,7 +86,7 @@ class NovelController extends Controller
     public function update(UpdateNovelRequest $request, Novel $novel)
     {   
         // Verifica si el usuario es el creador de la novela o un administrador
-        $this->authorizeCreatorOrAdmin($novel);
+        //$this->authorizeCreatorOrAdmin($novel);
         $novel->update($request->validated());
         return response()->json([
             'success' => true,
