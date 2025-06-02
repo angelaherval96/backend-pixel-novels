@@ -29,7 +29,7 @@ class NovelPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->role === 'admin' || $user->role === 'creator';
     }
 
     /**
