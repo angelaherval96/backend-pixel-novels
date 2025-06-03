@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title')->nullable();
             $table->text('content');
+            $table->enum('content_type', ['text', 'image', 'video', 'comic_page'])->default('text');
             $table->foreignId('novel_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->unsignedInteger('order')->default(1);
             $table->timestamps();
         });
     }

@@ -26,24 +26,39 @@ class ChapterController extends Controller
     }
 
     //Comprueba el rol del usuario, ya que solo los creadores y administradores pueden actualizar, guardar y eliminar capítulos
-    protected function authorizeCreatorOrAdmin()
+    protected function authorizeCreatorOrAdmin(Novel $novel = null)
     {
-        $user = auth()->user();
-        if ($user->role !== 'creator' && $user->role !== 'admin') {
-            abort(403, 'No autorizado'); // 403 Forbidden, el usuario no tiene permiso para realizar esta acción
+        $user = auth()->user(); // o request()->user()
+
+        if (!$user) { // Siempre es buena idea verificar si hay usuario
+            abort(401, 'No autenticado');
         }
+
+        if ($user->role === 'admin') {
+            return; // El admin puede hacer todo
+        }
+
+        // Si es un creador, necesita ser el dueño de la novela específica
+        if ($user->role === 'creator') {
+            if ($novel && $novel->creator_id === $user->id) { // Asumiendo que Novel tiene creator_id
+                return;
+            }
+        }
+        
+        abort(403, 'No autorizado');
     }
 
     //Lista todos los capítulos de una novela específica
     public function index(Novel $novel)
     {   
+        //Ordenar los capítulos por orden de forma ascendente
         $chapters = Chapter::where('novel_id', $novel->id)->get();
         if ($chapters->isEmpty()) {
             return response()->json([
                 'success' => false,
                 'message' => 'No hay capítulos disponibles para esta novela.',
-                'data' => null
-            ], 404);
+                'data' => []
+            ], 200);
         }
         return response()->json([
             'success' => true,
@@ -60,13 +75,22 @@ class ChapterController extends Controller
     //Muestra un capítulo específico de una novela en concreto
     public function show(Novel $novel, Chapter $chapter)
     {   
-        $chapterInNovel = $this->findChapterInNovel($novel->id, $chapter->id);
+        // $chapterInNovel = $this->findChapterInNovel($novel->id, $chapter->id);
+        
+         //Verifica que el capítulo pertenezca a la novela
+        if ($chapter->novel_id !== $novel->id){
+             return response()->json([
+                'success' => false,
+                'message' => 'Capítulo no encontrado en esta novela.',
+                'data' => null
+            ], 404);
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Capítulo obtenido correctamente.',
             'data' => [
-                'chapter' => $chapterInNovel
+                'chapter' => $chapter //$chapterInNovel
             ]
         ], 200);
     }
@@ -76,7 +100,7 @@ class ChapterController extends Controller
     public function store(StoreChapterRequest $request, Novel $novel)
     {   
         
-        $this->authorizeCreatorOrAdmin();
+        //$this->authorizeCreatorOrAdmin();
         
         $exists = Chapter::where('novel_id', $novel->id)
             ->where('title', $request->title)
@@ -92,6 +116,8 @@ class ChapterController extends Controller
         // Valida y crea el capítulo
         $validatedData = $request->validated();
         $validatedData['novel_id'] = $novel->id; // Asociar el capítulo a la novela
+    
+        
         $chapter = Chapter::create($validatedData);
 
         return response()->json([
@@ -107,7 +133,7 @@ class ChapterController extends Controller
     //Actualiza un capítulo específico de una novela
     public function update(UpdateChapterRequest $request, Novel $novel, Chapter $chapter)
     {   
-        $this->authorizeCreatorOrAdmin();
+        //$this->authorizeCreatorOrAdmin();
         $chapterInNovel = $this->findChapterInNovel($novel->id, $chapter->id);
         // Valida y actualiza el capítulo
         $validatedData = $request->validated();
