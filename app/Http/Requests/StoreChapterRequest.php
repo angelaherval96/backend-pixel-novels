@@ -11,7 +11,24 @@ class StoreChapterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        $user = Auth::user();
+
+        //Si no hay usuario autenticado
+        if (!$user || !$novel){
+            return false;
+        }
+
+        if($user->role === "admin") {
+            return true; // Los administradores tienen acceso sin restricciones
+        }
+        if ($user->role === "creator" && $novel->user_id === $user->id) {
+            return true; // El creador solo puede editar sus novelas
+        }
+        else
+        {   
+            // Si el usuario no es ni creador ni administrador, se aborta la solicitud con un error 403
+            abort(403, 'No autorizado');
+        }
     }
 
     /**
@@ -22,7 +39,10 @@ class StoreChapterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'content_type' => 'required|string|in:text,image,video,comic_page', // Ajusta los tipos permitidos
+            'order' => 'nullable|integer',
         ];
     }
 }

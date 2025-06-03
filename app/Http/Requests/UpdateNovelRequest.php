@@ -38,9 +38,21 @@ class UpdateNovelRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {
+    {   
         return [
-            //
+            'title' => [
+                'sometimes',
+                'string',
+                'max:255',
+                Rule::unique('novels', 'title')
+                ->where(function ($query) {
+                    return $query->where('creator_id', $this->user()->id); // Asumiendo que el campo es creator_id
+                }) 
+                //Regla para asegurar que el título sea único por usuario.
+            ],
+            'description' => 'nullable|string',
+            'language' => 'sometimes|string|max:10',
+            'cover' => 'sometimes|string|url',  // Si es un archivo subido, la validación es diferente (ej. 'image|mimes:jpg,png|max:2048')
         ];
     }
 }
