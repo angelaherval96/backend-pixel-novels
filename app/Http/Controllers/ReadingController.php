@@ -41,7 +41,7 @@ class ReadingController extends Controller
     public function storeOrUpdate(Request $request, Chapter $chapter)
     {   
         $request->validate([
-            'progress' => 'required|integer|min:0|max:1',
+            'progress' => 'required|integer|min:0|max:100',
             'read_at' => 'nullable|date',
         ]);
 
