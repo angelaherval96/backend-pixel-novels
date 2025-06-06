@@ -43,13 +43,13 @@ class FavouriteController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $favouriteNovels = $user->favouriteNovels()->with('creator')->get();
+        $favourites = $user->favouriteNovels()->with('creator')->get();
 
         return response()->json([
             'success' => true,
             'message' => 'Novelas favoritas obtenidas correctamente.',
             'data' => [
-                'favouriteNovels' => $favouriteNovels
+                'favouriteNovels' => $favourites
             ]
         ], 200);
     }
