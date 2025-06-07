@@ -8,6 +8,7 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\ReadingController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 
 //Proporciona información del usuario autenticado
 Route::get('/user', function (Request $request) {
@@ -22,6 +23,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Actualizar perfil del usuario
     Route::put('/user', [AuthController::class, 'update']);
+
+    //Obtener lista de novelas para el panel de control filtrada según el rol del usuario
+    Route::get('/dashboard/novels', [DashboardController::class, 'novels']);
 
     //Añadir, eliminar y listar favoritos
     Route::post('/novels/{novel}/favourite', [FavouriteController::class, 'store']);
