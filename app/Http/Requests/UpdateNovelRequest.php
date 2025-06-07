@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class UpdateNovelRequest extends FormRequest
 {
@@ -12,6 +14,7 @@ class UpdateNovelRequest extends FormRequest
     public function authorize(): bool
     {
         $user = Auth::user();
+        $novel = $this->route('novel'); // Obtiene la novela de la ruta actual
 
         //Si no hay usuario autenticado
         if (!$user || !$novel){
@@ -44,10 +47,10 @@ class UpdateNovelRequest extends FormRequest
                 'sometimes',
                 'string',
                 'max:255',
-                Rule::unique('novels', 'title')
+                Rule::unique('novels', 'title') //Debe ser único en la tabla 'novels' para el campo 'title'
                 ->where(function ($query) {
-                    return $query->where('creator_id', $this->user()->id); // Asumiendo que el campo es creator_id
-                }) 
+                    return $query->where('user_id', $this->user()->id); // Asumiendo que el campo es creator_id
+                }) -> ignore($this->route('novel')->id),  // Ignora la novela actual para evitar conflictos al actualizar
                 //Regla para asegurar que el título sea único por usuario.
             ],
             'description' => 'nullable|string',
