@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use App\Models\Novel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreChapterRequest;
 use App\Http\Requests\UpdateChapterRequest;
 
@@ -172,8 +173,9 @@ class ChapterController extends Controller
         ]);
         //Guardar el archivo en el sistema de archivos
         $file = $request->file('media_file');
-        $url = $file->store('media', 'public'); // Guardar en el disco 'public' en la carpeta 'media'
+        $path = $file->store('media', 'public'); // Guardar en el disco 'public' en la carpeta 'media'
 
+        $url = asset(Storage::url($path)); // Obtener la URL pública del archivo guardado
         return response()->json([
             'success' => true,
             'message' => 'Archivo multimedia subido correctamente.',
