@@ -163,5 +163,24 @@ class ChapterController extends Controller
         ], 200);
     }
 
+    //Función para subir archivos multimedia (imágenes, vídeos, etc.) asociados a un capítulo
+    public function uploadMedia(Request $request)
+    {
+        $request->validate([
+            //'media-file' es el nombre que se le dará al campo en el frontend
+            'media_file' => 'required|file|mimetypes:video/mp4, image/jpg,image/jpeg,image/png,image/gif|max:20480', // 20MB max
+        ]);
+        //Guardar el archivo en el sistema de archivos
+        $file = $request->file('media_file');
+        $url = $file->store('media', 'public'); // Guardar en el disco 'public' en la carpeta 'media'
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Archivo multimedia subido correctamente.',
+            'data' => [
+                'url' => $url // Devuelve la ruta del archivo guardado
+            ]
+        ], 200);
+    }
 }
 
