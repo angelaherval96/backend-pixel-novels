@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreChapterRequest extends FormRequest
 {
@@ -12,6 +13,7 @@ class StoreChapterRequest extends FormRequest
     public function authorize(): bool
     {
         $user = Auth::user();
+        $novel = $this->route('novel'); // Obtiene la novela de la ruta actual
 
         //Si no hay usuario autenticado
         if (!$user || !$novel){
@@ -41,7 +43,7 @@ class StoreChapterRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'content_type' => 'required|string|in:text,image,video,comic_page', // Ajusta los tipos permitidos
+            'content_type' => 'required|string|in:text,image,video,comic_page', 
             'order' => 'nullable|integer',
         ];
     }

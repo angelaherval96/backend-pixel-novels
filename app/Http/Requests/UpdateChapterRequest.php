@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateChapterRequest extends FormRequest
 {
@@ -11,7 +12,8 @@ class UpdateChapterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-       $user = Auth::user();
+        $user = Auth::user();
+        $novel = $this->route('novel'); // Obtiene la novela de la ruta actual
 
         //Si no hay usuario autenticado
         if (!$user || !$novel){

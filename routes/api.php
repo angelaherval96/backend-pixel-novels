@@ -26,6 +26,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Obtener lista de novelas para el panel de control filtrada según el rol del usuario
     Route::get('/dashboard/novels', [DashboardController::class, 'novels']);
+    //Obtener la lista de todos los usuarios para el panel de control
+    Route::get('/dashboard/users', [DashboardController::class, 'users']);
+    //Eliminar usuario
+    Route::delete('/dashboard/users/{user}', [DashboardController::class, 'destroyUser']);
 
     //Añadir, eliminar y listar favoritos
     Route::post('/novels/{novel}/favourite', [FavouriteController::class, 'store']);
