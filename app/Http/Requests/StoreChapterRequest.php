@@ -43,7 +43,7 @@ class StoreChapterRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'content' => 'required|string',
-            'content_type' => 'required|string|in:text,image,video,comic_page', 
+            'content_type' => 'required|string|in:text,image,video,comic_page,image_sequence', 
             'order' => 'nullable|integer',
         ];
     }

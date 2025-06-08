@@ -43,7 +43,7 @@ class UpdateChapterRequest extends FormRequest
         return [
             'title' => 'sometimes|string|max:255',
             'content' => 'sometimes|string',
-            'content_type' => 'sometimes|string|in:text,image,video,comic_page', 
+            'content_type' => 'sometimes|string|in:text,image,video,comic_page,image_sequence', 
             'order' => 'sometimes|integer',
         ];
     }
