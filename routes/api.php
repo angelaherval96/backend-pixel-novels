@@ -27,6 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //Subir archivos
     Route::post('/chapters/upload', [ChapterController::class, 'uploadMedia']);
 
+    //Subir múltiples archivos
+    Route::post('/chapters/upload-multiple', [ChapterController::class, 'uploadMultipleMedia']);
+
     //Obtener lista de novelas para el panel de control filtrada según el rol del usuario
     Route::get('/dashboard/novels', [DashboardController::class, 'novels']);
     //Obtener la lista de todos los usuarios para el panel de control

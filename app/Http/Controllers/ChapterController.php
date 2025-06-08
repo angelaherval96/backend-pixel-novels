@@ -41,7 +41,7 @@ class ChapterController extends Controller
 
         // Si es un creador, necesita ser el dueño de la novela específica
         if ($user->role === 'creator') {
-            if ($novel && $novel->creator_id === $user->id) { // Asumiendo que Novel tiene creator_id
+            if ($novel && $novel->user_id === $user->id) { 
                 return;
             }
         }
@@ -152,7 +152,7 @@ class ChapterController extends Controller
     //Elimina un capítulo específico de una novela
     public function destroy(Novel $novel, Chapter $chapter)
     {   
-        $this->authorizeCreatorOrAdmin();
+        $this->authorizeCreatorOrAdmin($novel);
         $chapterInNovel = $this->findChapterInNovel($novel->id, $chapter->id);
         
         $chapterInNovel->delete();
@@ -181,6 +181,35 @@ class ChapterController extends Controller
             'message' => 'Archivo multimedia subido correctamente.',
             'data' => [
                 'url' => $url // Devuelve la ruta del archivo guardado
+            ]
+        ], 200);
+    }
+
+    //Función para subir múltiples archivos multimedia (imágenes, vídeos, etc.) asociados a un capítulo
+    public function uploadMultipleMedia(Request $request)
+    {
+        $request->validate([
+            //'media_files' es el nombre que se le dará al campo en el frontend y el '*' indica que se pueden subir múltiples archivos, es decir se espera un array de archivos
+            'media_files' => 'required|array', // Asegura que se envíe un array de archivos
+            'media_files.*' => 'required|file|mimetypes:video/mp4, image/jpg,image/jpeg,image/png,image/gif|max:20480', // 20MB max por archivo
+        ]);
+
+        $urls = [];
+        //Itera sobre cada archivo subido si hay archivos en el request
+        if ($request->hasFile('media_files')) {
+            foreach ($request->file('media_files') as $file) {
+                $path = $file->store('media', 'public'); // Guardar en el disco 'public' en la carpeta 'media'
+                //Convierte la ruta en una URL completa y la agrega al array de URLs
+                $urls[] = asset(Storage::url($path)); 
+            }
+        }
+        
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Archivos multimedia subidos correctamente.',
+            'data' => [
+                'urls' => $urls // Devuelve un array con las rutas de los archivos guardados
             ]
         ], 200);
     }
