@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreNovelRequest;
 use App\Http\Requests\UpdateNovelRequest;
-
+use Illuminate\Support\Facades\Storage;
 
 class NovelController extends Controller
 {   
@@ -109,4 +109,22 @@ class NovelController extends Controller
         ], 200);
     }
 
+    //Subir una imagen de portada para una novela
+    public function uploadCover(Request $request)
+    {
+        //Valida que el archivo de portada sea una imagen y cumpla con los requisitos
+        $request->validate([
+            'cover_file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', 
+        ]);
+        $path = $request->file('cover_file')->store('novel_covers', 'public'); // Almacena la imagen en 'storage/app/public/novel_covers'
+        $url = asset(Storage::url($path)); // Obtiene la URL de la imagen almacenada
+     
+        return response()->json([
+            'success' => true,
+            'message' => 'Portada subida correctamente.',
+            'data' => [
+                'url' => $url
+            ]
+        ], 200);
+    }
 }
