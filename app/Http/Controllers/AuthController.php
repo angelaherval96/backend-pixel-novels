@@ -115,6 +115,28 @@ class AuthController extends Controller
         ], 200);
     }
 
+    //Función para guardar el avatar del usuario
+    public function setAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar_url' => 'required|url',
+        ]);
+
+        $user = auth()->user();
+
+        //Actualiza el registro del usuario con la nueva URL del avatar y lo guarda
+        $user->avatar_url = $request->input('avatar_url');
+        $user->save();
+        //Devuelve la respuesta de éxito con el usuairo actualizado
+        return response()->json([
+            'success' => true,
+            'message' => 'Avatar actualizado exitosamente',
+            'data' => [
+                'user' => $user
+            ]
+        ], 200);
+    }
+
     //Enviar enlace de recuperación de contraseña
     public function sendResetLinkEmail(Request $request)
     {
