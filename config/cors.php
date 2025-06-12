@@ -7,7 +7,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'http://localhost:8100',
+        'http://localhost:8100',//Para Ionic en desarrollo
         'http://localhost:8101',
         'http://localhost:8080', 
         //Para Capacitor en dispositivos nativos
