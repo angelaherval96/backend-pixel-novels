@@ -15,6 +15,12 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+//Permite que las peticiones OPTIONS no den error
+Route::options('{any}', function () {
+    return response()->json([], 200);
+})->where('any', '.*');
+
+
 //Rutas con login
 Route::middleware('auth:sanctum')->group(function () {
 
