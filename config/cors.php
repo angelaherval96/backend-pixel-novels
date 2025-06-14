@@ -10,6 +10,7 @@ return [
         'http://localhost:8100',//Para Ionic en desarrollo
         'http://localhost:8101',
         'http://localhost:8080', 
+        'https://frontend-pixel-novels-production.up.railway.app', //Para producción
         //Para Capacitor en dispositivos nativos
         'capacitor://localhost',
         'ionic://localhost',
