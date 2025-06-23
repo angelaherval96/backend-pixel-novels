@@ -1,61 +1,68 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📖 Pixel Novels - Backend (API)
+Este repositorio contiene el backend y la API RESTful para el proyecto Pixel Novels, una plataforma para la distribución de novelas visuales. Desarrollado con Laravel, este servidor se encarga de toda la lógica de negocio, la gestión de la base de datos y la autenticación de usuarios.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## ✨ Características Principales
+API RESTful Segura: Endpoints claros y bien estructurados para gestionar todos los recursos.
+Autenticación con Laravel Sanctum: Sistema de autenticación basado en tokens para proteger las rutas.
+Gestión de Roles y Permisos: Lógica para diferenciar entre usuarios, creadores y administradores.
+Operaciones CRUD: Funcionalidad completa para crear, leer, actualizar y eliminar novelas, capítulos, favoritos y más.
 
-## About Laravel
+## 🛠️ Tecnologías Utilizadas
+Framework: Laravel (v10)
+Lenguaje: PHP (v8.1+)
+Base de Datos: PostgreSQL
+Autenticación: Laravel Sanctum
+Gestión de Dependencias: Composer
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Instalación y Puesta en Marcha
+Para ejecutar este servidor en tu entorno local, sigue estos pasos:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. Prerrequisitos
+Asegúrate de tener instalado PHP, Composer y PostgreSQL.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. Instalación
+   
+#### 1. Clona el repositorio
+git clone https://github.com/angelaherval96/backend-pixel-novels/
+cd nombre-del-repositorio-backend
 
-## Learning Laravel
+#### 2. Instala las dependencias
+composer install
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### 3. Crea tu archivo de entorno y genera la clave
+cp .env.example .env
+php artisan key:generate
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+#### 4. Configura la conexión a tu base de datos en el archivo .env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=pixel_novels
+DB_USERNAME=tu_usuario
+DB_PASSWORD=tu_contraseña
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### 5. Ejecuta las migraciones para crear la estructura de la base de datos
+php artisan migrate
 
-## Laravel Sponsors
+#### 6. Puebla la base de datos con datos de prueba
+php artisan db:seed
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 3. Ejecución
 
-### Premium Partners
+#### Inicia el servidor de Laravel
+php artisan serve
+El servidor estará disponible en http://localhost:8000.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+#### Ejemplos de Endpoints de la API
 
-## Contributing
+| Método | Endpoint | Descripción | Requiere Auth |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/novels` | Obtiene la lista de todas las novelas. | Sí |
+| `GET` | `/api/novels/{id}` | Obtiene los detalles de una novela específica. | Sí|
+| `POST` | `/api/register` | Registra un nuevo usuario. | No |
+| `POST` | `/api/login` | Inicia sesión y devuelve un token. | No |
+| `POST` | `/api/novels/{id}/favourite` | Marca una novela como favorita. | Sí |
+| `POST` | `/api/novels` | Crea una nueva novela. | Sí (Rol Creator y Admin)|
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+📄 Licencia
+Este proyecto está bajo la Licencia MIT.
